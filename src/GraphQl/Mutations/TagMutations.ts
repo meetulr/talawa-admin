@@ -72,3 +72,11 @@ export const REMOVE_USER_TAG = gql`
     }
   }
 `;
+
+export const ADD_PEOPLE_TO_TAG = gql`
+  mutation AddPeopleToUserTag($tagId: ID!, $userIds: [ID!]!) {
+    addPeopleToUserTag(input: { tagId: $tagId, userIds: $userIds }) {
+      _id
+    }
+  }
+`;

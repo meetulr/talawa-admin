@@ -44,7 +44,7 @@ function OrganizationTags(): JSX.Element {
   const navigate = useNavigate();
   const [after, setAfter] = useState<string | null | undefined>(null);
   const [before, setBefore] = useState<string | null | undefined>(null);
-  const [first, setFirst] = useState<number | null>(5);
+  const [first, setFirst] = useState<number | null>(7);
   const [last, setLast] = useState<number | null>(null);
   const [tagSerialNumber, setTagSerialNumber] = useState(0);
 
@@ -67,6 +67,7 @@ function OrganizationTags(): JSX.Element {
     loading: orgUserTagsLoading,
     error: orgUserTagsError,
     refetch: orgUserTagsRefetch,
+    fetchMore,
   }: {
     data?: {
       organizations: InterfaceQueryOrganizationUserTags[];
@@ -74,6 +75,7 @@ function OrganizationTags(): JSX.Element {
     loading: boolean;
     error?: ApolloError;
     refetch: () => void;
+    fetchMore: any;
   } = useQuery(ORGANIZATION_USER_TAGS_LIST, {
     variables: {
       id: orgId,
@@ -151,21 +153,6 @@ function OrganizationTags(): JSX.Element {
     );
   }
 
-  const handleNextPage = (): void => {
-    setAfter(orgUserTagsData?.organizations[0].userTags.pageInfo.endCursor);
-    setBefore(null);
-    setFirst(5);
-    setLast(null);
-    setTagSerialNumber(tagSerialNumber + 1);
-  };
-  const handlePreviousPage = (): void => {
-    setBefore(orgUserTagsData?.organizations[0].userTags.pageInfo.startCursor);
-    setAfter(null);
-    setFirst(null);
-    setLast(5);
-    setTagSerialNumber(tagSerialNumber - 1);
-  };
-
   const userTagsList = orgUserTagsData?.organizations[0].userTags.edges.map(
     (edge) => edge.node,
   );
@@ -181,6 +168,39 @@ function OrganizationTags(): JSX.Element {
   const toggleRemoveUserTagModal = (): void => {
     if (removeTagModalIsOpen) setRemoveUserTagId(null);
     setRemoveTagModalIsOpen(!removeTagModalIsOpen);
+  };
+
+  const loadMoreUserTags = () => {
+    if (orgUserTagsData?.organizations[0].userTags.pageInfo.hasNextPage) {
+      fetchMore({
+        variables: {
+          first: 7,
+          after: orgUserTagsData.organizations[0].userTags.pageInfo.endCursor, // Fetch after the last loaded cursor
+        },
+        updateQuery: (
+          prevResult: any,
+          { fetchMoreResult }: { fetchMoreResult: any },
+        ) => {
+          if (!fetchMoreResult) return prevResult;
+
+          return {
+            organizations: [
+              {
+                ...prevResult.organizations[0],
+                userTags: {
+                  ...prevResult.organizations[0].userTags,
+                  edges: [
+                    ...prevResult.organizations[0].userTags.edges,
+                    ...fetchMoreResult.organizations[0].userTags.edges,
+                  ],
+                  pageInfo: fetchMoreResult.organizations[0].userTags.pageInfo,
+                },
+              },
+            ],
+          };
+        },
+      });
+    }
   };
 
   const columns: GridColDef[] = [
@@ -389,34 +409,16 @@ function OrganizationTags(): JSX.Element {
               isRowSelectable={() => false}
             />
           </div>
-        </div>
-
-        <div className="row m-md-3 d-flex justify-content-center w-100">
-          <div className="col-auto">
-            <Button
-              onClick={handlePreviousPage}
-              className="btn-sm"
-              data-testid="previousPageBtn"
-              disabled={
-                !orgUserTagsData?.organizations[0].userTags.pageInfo
-                  .hasPreviousPage
-              }
-            >
-              <i className={'mx-2 fa fa-caret-left'} />
-            </Button>
-          </div>
-          <div className="col-auto">
-            <Button
-              onClick={handleNextPage}
-              className="btn-sm"
-              data-testid="nextPagBtn"
-              disabled={
-                !orgUserTagsData?.organizations[0].userTags.pageInfo.hasNextPage
-              }
-            >
-              <i className={'mx-2 fa fa-caret-right'} />
-            </Button>
-          </div>
+          <Button
+            className="w-100 btn-sm rounded-top-0 mb-4"
+            onClick={loadMoreUserTags}
+            disabled={
+              orgUserTagsLoading ||
+              !orgUserTagsData?.organizations[0].userTags.pageInfo.hasNextPage
+            }
+          >
+            <i className={'mx-2 fa fa-caret-down'} />
+          </Button>
         </div>
       </Row>
 

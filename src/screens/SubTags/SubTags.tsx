@@ -49,7 +49,7 @@ function SubTags(): JSX.Element {
 
   const [after, setAfter] = useState<string | null | undefined>(null);
   const [before, setBefore] = useState<string | null | undefined>(null);
-  const [first, setFirst] = useState<number | null>(5);
+  const [first, setFirst] = useState<number | null>(7);
   const [last, setLast] = useState<number | null>(null);
 
   const [tagName, setTagName] = useState<string>('');
@@ -72,6 +72,7 @@ function SubTags(): JSX.Element {
     loading: subTagsLoading,
     error: subTagsError,
     refetch: subTagsRefetch,
+    fetchMore,
   }: {
     data?: {
       getUserTag: InterfaceQueryUserTagChildTags;
@@ -79,6 +80,7 @@ function SubTags(): JSX.Element {
     loading: boolean;
     error?: ApolloError;
     refetch: () => void;
+    fetchMore: any;
   } = useQuery(USER_TAG_SUB_TAGS, {
     variables: {
       id: parentTagId,
@@ -163,20 +165,6 @@ function SubTags(): JSX.Element {
     return <Loader />;
   }
 
-  const handleNextPage = (): void => {
-    setAfter(subTagsData?.getUserTag.childTags.pageInfo.endCursor);
-    setBefore(null);
-    setFirst(5);
-    setLast(null);
-  };
-
-  const handlePreviousPage = (): void => {
-    setBefore(subTagsData?.getUserTag.childTags.pageInfo.startCursor);
-    setAfter(null);
-    setFirst(null);
-    setLast(5);
-  };
-
   if (subTagsError || orgUserTagsAncestorsError) {
     return (
       <div className={`${styles.errorContainer} bg-white rounded-4 my-3`}>
@@ -214,6 +202,36 @@ function SubTags(): JSX.Element {
       setRemoveUserTagId(null);
     }
     setRemoveUserTagModalIsOpen(!removeUserTagModalIsOpen);
+  };
+
+  const loadMoreSubTags = () => {
+    if (subTagsData?.getUserTag.childTags.pageInfo.hasNextPage) {
+      fetchMore({
+        variables: {
+          first: 7,
+          after: subTagsData.getUserTag.childTags.pageInfo.endCursor, // Fetch after the last loaded cursor
+        },
+        updateQuery: (
+          prevResult: any,
+          { fetchMoreResult }: { fetchMoreResult: any },
+        ) => {
+          if (!fetchMoreResult) return prevResult;
+
+          return {
+            getUserTag: {
+              ...fetchMoreResult.getUserTag,
+              childTags: {
+                ...fetchMoreResult.getUserTag.childTags,
+                edges: [
+                  ...prevResult.getUserTag.childTags.edges,
+                  ...fetchMoreResult.getUserTag.childTags.edges,
+                ],
+              },
+            },
+          };
+        },
+      });
+    }
   };
 
   const columns: GridColDef[] = [
@@ -451,30 +469,15 @@ function SubTags(): JSX.Element {
               columns={columns}
               isRowSelectable={() => false}
             />
-          </div>
-        </div>
-
-        <div className="row m-md-3 d-flex justify-content-center w-100">
-          <div className="col-auto">
             <Button
-              onClick={handlePreviousPage}
-              className="btn-sm"
+              className="w-100 btn-sm rounded-top-0 mb-4"
+              onClick={loadMoreSubTags}
               disabled={
-                !subTagsData?.getUserTag.childTags.pageInfo.hasPreviousPage
+                subTagsLoading ||
+                !subTagsData?.getUserTag.childTags.pageInfo.hasNextPage
               }
-              data-testid="previousPageBtn"
             >
-              <i className={'mx-2 fa fa-caret-left'} />
-            </Button>
-          </div>
-          <div className="col-auto">
-            <Button
-              onClick={handleNextPage}
-              className="btn-sm"
-              disabled={!subTagsData?.getUserTag.childTags.pageInfo.hasNextPage}
-              data-testid="nextPagBtn"
-            >
-              <i className={'mx-2 fa fa-caret-right'} />
+              <i className={'mx-2 fa fa-caret-down'} />
             </Button>
           </div>
         </div>

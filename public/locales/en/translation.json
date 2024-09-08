@@ -223,10 +223,12 @@
     "addPeopleToTag": "Add People to tag",
     "viewProfile": "View",
     "noAssignedMembersFound": "No one assigned",
+    "noOneToAssign": "No one to assign",
     "unassignUserTag": "Unassign Tag",
     "unassignUserTagMessage": "Do you want to remove the tag from this user?",
     "successfullyUnassigned": "Tag unassigned from user",
     "addPeople": "Add People",
+    "successfullyAssignedToPeople": "Tag assigned to people",
     "add": "Add",
     "subTags": "Sub Tags"
   },

@@ -23,6 +23,7 @@ import {
   USER_TAG_ANCESTORS,
   USER_TAGS_ASSIGNED_MEMBERS,
 } from 'GraphQl/Queries/userTagQueries';
+import AddPeopleToTag from 'components/AddPeopleToTag/AddPeopleToTag';
 
 /**
  * Component that renders the Manage Tag screen when the app navigates to '/orgtags/:orgId/managetag/:tagId'.
@@ -45,7 +46,7 @@ function ManageTag(): JSX.Element {
   const navigate = useNavigate();
   const [after, setAfter] = useState<string | null | undefined>(null);
   const [before, setBefore] = useState<string | null | undefined>(null);
-  const [first, setFirst] = useState<number | null>(5);
+  const [first, setFirst] = useState<number | null>(7);
   const [last, setLast] = useState<number | null>(null);
 
   const [unassignUserId, setUnassignUserId] = useState(null);
@@ -63,6 +64,7 @@ function ManageTag(): JSX.Element {
     loading: userTagAssignedMembersLoading,
     error: userTagAssignedMembersError,
     refetch: userTagAssignedMembersRefetch,
+    fetchMore,
   }: {
     data?: {
       getUserTag: InterfaceQueryUserTagsAssignedMembers;
@@ -70,6 +72,7 @@ function ManageTag(): JSX.Element {
     loading: boolean;
     error?: ApolloError;
     refetch: () => void;
+    fetchMore: any;
   } = useQuery(USER_TAGS_ASSIGNED_MEMBERS, {
     variables: {
       id: currentTagId,
@@ -159,29 +162,46 @@ function ManageTag(): JSX.Element {
     navigate(`/orgtags/${orgId}/managetag/${tagId}`);
   };
 
-  const handleNextPage = (): void => {
-    setAfter(
-      userTagAssignedMembersData?.getUserTag.usersAssignedTo.pageInfo.endCursor,
-    );
-    setBefore(null);
-    setFirst(5);
-    setLast(null);
-  };
-  const handlePreviousPage = (): void => {
-    setBefore(
-      userTagAssignedMembersData?.getUserTag.usersAssignedTo.pageInfo
-        .startCursor,
-    );
-    setAfter(null);
-    setFirst(null);
-    setLast(5);
-  };
-
   const toggleUnassignTagModal = (): void => {
     if (unassignTagModalIsOpen) {
       setUnassignUserId(null);
     }
     setUnassignTagModalIsOpen(!unassignTagModalIsOpen);
+  };
+
+  const loadMoreAssignedMembers = () => {
+    if (
+      userTagAssignedMembersData?.getUserTag.usersAssignedTo.pageInfo
+        .hasNextPage
+    ) {
+      fetchMore({
+        variables: {
+          first: 7,
+          after:
+            userTagAssignedMembersData.getUserTag.usersAssignedTo.pageInfo
+              .endCursor, // Fetch after the last loaded cursor
+        },
+        updateQuery: (
+          prevResult: any,
+          { fetchMoreResult }: { fetchMoreResult: any },
+        ) => {
+          if (!fetchMoreResult) return prevResult;
+
+          return {
+            getUserTag: {
+              ...fetchMoreResult.getUserTag,
+              usersAssignedTo: {
+                ...fetchMoreResult.getUserTag.usersAssignedTo,
+                edges: [
+                  ...prevResult.getUserTag.usersAssignedTo.edges,
+                  ...fetchMoreResult.getUserTag.usersAssignedTo.edges,
+                ],
+              },
+            },
+          };
+        },
+      });
+    }
   };
 
   const columns: GridColDef[] = [
@@ -377,35 +397,17 @@ function ManageTag(): JSX.Element {
                 columns={columns}
                 isRowSelectable={() => false}
               />
-
-              <div className="row m-md-3 d-flex justify-content-center w-100">
-                <div className="col-auto">
-                  <Button
-                    onClick={handlePreviousPage}
-                    className="btn-sm"
-                    disabled={
-                      !userTagAssignedMembersData?.getUserTag.usersAssignedTo
-                        .pageInfo.hasPreviousPage
-                    }
-                    data-testid="previousPageBtn"
-                  >
-                    <i className={'mx-2 fa fa-caret-left'} />
-                  </Button>
-                </div>
-                <div className="col-auto">
-                  <Button
-                    onClick={handleNextPage}
-                    className="btn-sm"
-                    disabled={
-                      !userTagAssignedMembersData?.getUserTag.usersAssignedTo
-                        .pageInfo.hasNextPage
-                    }
-                    data-testid="nextPagBtn"
-                  >
-                    <i className={'mx-2 fa fa-caret-right'} />
-                  </Button>
-                </div>
-              </div>
+              <Button
+                className="w-100 btn-sm rounded-top-0 mb-4"
+                onClick={loadMoreAssignedMembers}
+                disabled={
+                  userTagAssignedMembersLoading ||
+                  !userTagAssignedMembersData?.getUserTag.usersAssignedTo
+                    .pageInfo.hasNextPage
+                }
+              >
+                <i className={'mx-2 fa fa-caret-down'} />
+              </Button>
             </Col>
 
             <Col className="ms-auto" xs={3}>
@@ -432,41 +434,13 @@ function ManageTag(): JSX.Element {
       </Row>
 
       {/* Add People To Tag Modal */}
-      <Modal
-        show={addPeopleToTagModalIsOpen}
-        onHide={hideAddPeopleToTagModal}
-        backdrop="static"
-        aria-labelledby="contained-modal-title-vcenter"
-        centered
-      >
-        <Modal.Header
-          className="bg-primary"
-          data-testid="modalOrganizationHeader"
-          closeButton
-        >
-          <Modal.Title className="text-white">{t('addPeople')}</Modal.Title>
-        </Modal.Header>
-        <Form>
-          <Modal.Body></Modal.Body>
-
-          <Modal.Footer>
-            <Button
-              variant="secondary"
-              onClick={(): void => hideAddPeopleToTagModal()}
-              data-testid="closeAddPeopleToTagModal"
-            >
-              {tCommon('cancel')}
-            </Button>
-            <Button
-              type="submit"
-              value="add"
-              data-testid="addPeopleToTagModalSubmitBtn"
-            >
-              {t('add')}
-            </Button>
-          </Modal.Footer>
-        </Form>
-      </Modal>
+      <AddPeopleToTag
+        addPeopleToTagModalIsOpen={addPeopleToTagModalIsOpen}
+        hideAddPeopleToTagModal={hideAddPeopleToTagModal}
+        refetchAssignedMembersData={userTagAssignedMembersRefetch}
+        t={t}
+        tCommon={tCommon}
+      />
 
       {/* Unassign Tag Modal */}
       <Modal

@@ -231,24 +231,31 @@ export interface InterfaceQueryOrganizationUserTags {
   userTags: InterfaceTagData;
 }
 
+interface InterfaceTagMembersData {
+  edges: {
+    node: {
+      _id: string;
+      firstName: string;
+      lastName: string;
+    };
+  }[];
+  pageInfo: {
+    startCursor: string;
+    endCursor: string;
+    hasNextPage: boolean;
+    hasPreviousPage: boolean;
+  };
+  totalCount: number;
+}
+
 export interface InterfaceQueryUserTagsAssignedMembers {
   name: string;
-  usersAssignedTo: {
-    edges: {
-      node: {
-        _id: string;
-        firstName: string;
-        lastName: string;
-      };
-    }[];
-    pageInfo: {
-      startCursor: string;
-      endCursor: string;
-      hasNextPage: boolean;
-      hasPreviousPage: boolean;
-    };
-    totalCount: number;
-  };
+  usersAssignedTo: InterfaceTagMembersData;
+}
+
+export interface InterfaceQueryUserTagsMembersToAssignTo {
+  name: string;
+  usersToAssignTo: InterfaceTagMembersData;
 }
 
 export interface InterfaceQueryUserTagChildTags {
