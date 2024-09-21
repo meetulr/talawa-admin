@@ -128,7 +128,7 @@ function SubTags(): JSX.Element {
 
       /* istanbul ignore next */
       if (data) {
-        toast.success(t('tagCreationSuccess'));
+        toast.success(t('tagCreationSuccess') as string);
         subTagsRefetch();
         setTagName('');
         setAddSubTagModalIsOpen(false);
@@ -152,7 +152,7 @@ function SubTags(): JSX.Element {
 
       subTagsRefetch();
       toggleRemoveUserTagModal();
-      toast.success(t('tagRemovalSuccess'));
+      toast.success(t('tagRemovalSuccess') as string);
     } catch (error: unknown) {
       /* istanbul ignore next */
       if (error instanceof Error) {
