@@ -24,6 +24,7 @@ import {
   USER_TAGS_ASSIGNED_MEMBERS,
 } from 'GraphQl/Queries/userTagQueries';
 import AddPeopleToTag from 'components/AddPeopleToTag/AddPeopleToTag';
+import AssignToTags from 'components/AssignToTags/AssignToTags';
 
 /**
  * Component that renders the Manage Tag screen when the app navigates to '/orgtags/:orgId/managetag/:tagId'.
@@ -40,6 +41,7 @@ function ManageTag(): JSX.Element {
 
   const [addPeopleToTagModalIsOpen, setAddPeopleToTagModalIsOpen] =
     useState(false);
+  const [assignToTagsModalIsOpen, setAssignToTagsModalIsOpen] = useState(false);
   const [unassignTagModalIsOpen, setUnassignTagModalIsOpen] = useState(false);
 
   const { orgId, tagId: currentTagId } = useParams();
@@ -55,8 +57,16 @@ function ManageTag(): JSX.Element {
     setAddPeopleToTagModalIsOpen(true);
   };
 
+  const showAssignToTagsModal = (): void => {
+    setAssignToTagsModalIsOpen(true);
+  };
+
   const hideAddPeopleToTagModal = (): void => {
     setAddPeopleToTagModalIsOpen(false);
+  };
+
+  const hideAssignToTagsModal = (): void => {
+    setAssignToTagsModalIsOpen(false);
   };
 
   const {
@@ -421,10 +431,16 @@ function ManageTag(): JSX.Element {
                 <hr className="mb-1 mt-2" />
               </div>
               <div className="bg-white rounded-bottom mb-0 py-2 fw-semibold ms-2">
-                <div className="ms-4 mb-2 btn btn-primary btn-sm w-75">
-                  {'Add to tags'}
+                <div
+                  onClick={showAssignToTagsModal}
+                  className="ms-4 mb-2 btn btn-primary btn-sm w-75"
+                >
+                  {'Assign to tags'}
                 </div>
-                <div className="ms-4 mb-2 btn btn-danger btn-sm w-75">
+                <div
+                  onClick={showAddPeopleToTagModal}
+                  className="ms-4 mb-2 btn btn-danger btn-sm w-75"
+                >
                   {'Remove from tags'}
                 </div>
               </div>
@@ -438,6 +454,14 @@ function ManageTag(): JSX.Element {
         addPeopleToTagModalIsOpen={addPeopleToTagModalIsOpen}
         hideAddPeopleToTagModal={hideAddPeopleToTagModal}
         refetchAssignedMembersData={userTagAssignedMembersRefetch}
+        t={t}
+        tCommon={tCommon}
+      />
+
+      {/* Add People To Tag Modal */}
+      <AssignToTags
+        assignToTagsModalIsOpen={assignToTagsModalIsOpen}
+        hideAssignToTagsModal={hideAssignToTagsModal}
         t={t}
         tCommon={tCommon}
       />
