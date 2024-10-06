@@ -25,6 +25,7 @@ import {
 } from 'GraphQl/Queries/userTagQueries';
 import AddPeopleToTag from 'components/AddPeopleToTag/AddPeopleToTag';
 import AssignToTags from 'components/AssignToTags/AssignToTags';
+import RemoveFromTags from 'components/RemoveFromTags/RemoveFromTags';
 
 /**
  * Component that renders the Manage Tag screen when the app navigates to '/orgtags/:orgId/managetag/:tagId'.
@@ -42,6 +43,8 @@ function ManageTag(): JSX.Element {
   const [addPeopleToTagModalIsOpen, setAddPeopleToTagModalIsOpen] =
     useState(false);
   const [assignToTagsModalIsOpen, setAssignToTagsModalIsOpen] = useState(false);
+  const [removeFromTagsModalIsOpen, setRemoveFromTagsModalIsOpen] =
+    useState(false);
   const [unassignTagModalIsOpen, setUnassignTagModalIsOpen] = useState(false);
 
   const { orgId, tagId: currentTagId } = useParams();
@@ -61,12 +64,20 @@ function ManageTag(): JSX.Element {
     setAssignToTagsModalIsOpen(true);
   };
 
+  const showRemoveFromTagsModal = (): void => {
+    setRemoveFromTagsModalIsOpen(true);
+  };
+
   const hideAddPeopleToTagModal = (): void => {
     setAddPeopleToTagModalIsOpen(false);
   };
 
   const hideAssignToTagsModal = (): void => {
     setAssignToTagsModalIsOpen(false);
+  };
+
+  const hideRemoveFromTagsModal = (): void => {
+    setRemoveFromTagsModalIsOpen(false);
   };
 
   const {
@@ -438,7 +449,7 @@ function ManageTag(): JSX.Element {
                   {'Assign to tags'}
                 </div>
                 <div
-                  onClick={showAddPeopleToTagModal}
+                  onClick={showRemoveFromTagsModal}
                   className="ms-4 mb-2 btn btn-danger btn-sm w-75"
                 >
                   {'Remove from tags'}
@@ -458,10 +469,18 @@ function ManageTag(): JSX.Element {
         tCommon={tCommon}
       />
 
-      {/* Add People To Tag Modal */}
+      {/* Assign People To Tags Modal */}
       <AssignToTags
         assignToTagsModalIsOpen={assignToTagsModalIsOpen}
         hideAssignToTagsModal={hideAssignToTagsModal}
+        t={t}
+        tCommon={tCommon}
+      />
+
+      {/* Remove People from Tags Modal */}
+      <RemoveFromTags
+        removeFromTagsModalIsOpen={removeFromTagsModalIsOpen}
+        hideRemoveFromTagsModal={hideRemoveFromTagsModal}
         t={t}
         tCommon={tCommon}
       />

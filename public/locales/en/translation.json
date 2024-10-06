@@ -333,9 +333,13 @@
     "successfullyUnassigned": "Tag unassigned from user",
     "addPeople": "Add People",
     "assignToTags": "Assign To Tags",
+    "removeFromTags": "Remove From Tags",
     "successfullyAssignedToPeople": "Tag assigned to people",
+    "successfullyAssignedToTags": "Tags assigned successfully",
+    "successfullyRemovedFromTags": "Removed from tags successfully",
     "add": "Add",
     "assign": "Assign",
+    "remove": "Remove",
     "subTags": "Sub Tags"
   },
   "userListCard": {

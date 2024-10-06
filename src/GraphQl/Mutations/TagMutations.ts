@@ -80,3 +80,23 @@ export const ADD_PEOPLE_TO_TAG = gql`
     }
   }
 `;
+
+export const ASSIGN_TO_TAGS = gql`
+  mutation AddToUserTags($currentTagId: ID!, $selectedTagIds: [ID!]!) {
+    addToUserTags(
+      input: { currentTagId: $currentTagId, selectedTagIds: $selectedTagIds }
+    ) {
+      _id
+    }
+  }
+`;
+
+export const REMOVE_FROM_TAGS = gql`
+  mutation RemoveFromUserTags($currentTagId: ID!, $selectedTagIds: [ID!]!) {
+    removeFromUserTags(
+      input: { currentTagId: $currentTagId, selectedTagIds: $selectedTagIds }
+    ) {
+      _id
+    }
+  }
+`;

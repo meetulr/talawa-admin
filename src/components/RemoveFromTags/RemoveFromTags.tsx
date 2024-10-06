@@ -12,24 +12,24 @@ import {
   InterfaceQueryUserTagChildTags,
   InterfaceTagData,
 } from 'utils/interfaces';
-import styles from './AssignToTags.module.css';
+import styles from './RemoveFromTags.module.css';
 import { ORGANIZATION_USER_TAGS_LIST } from 'GraphQl/Queries/OrganizationQueries';
-import { ASSIGN_TO_TAGS } from 'GraphQl/Mutations/TagMutations';
+import { REMOVE_FROM_TAGS } from 'GraphQl/Mutations/TagMutations';
 import { toast } from 'react-toastify';
 
 /**
- * Props for the `AssignToTags` component.
+ * Props for the `RemoveFromTags` component.
  */
-interface InterfaceAssignToTagsProps {
-  assignToTagsModalIsOpen: boolean;
-  hideAssignToTagsModal: () => void;
+interface InterfaceRemoveFromTagsProps {
+  removeFromTagsModalIsOpen: boolean;
+  hideRemoveFromTagsModal: () => void;
   t: (key: string) => string;
   tCommon: (key: string) => string;
 }
 
-const AssignToTags: React.FC<InterfaceAssignToTagsProps> = ({
-  assignToTagsModalIsOpen,
-  hideAssignToTagsModal,
+const RemoveFromTags: React.FC<InterfaceRemoveFromTagsProps> = ({
+  removeFromTagsModalIsOpen,
+  hideRemoveFromTagsModal,
   t,
   tCommon,
 }) => {
@@ -62,7 +62,7 @@ const AssignToTags: React.FC<InterfaceAssignToTagsProps> = ({
       first: first,
       last: last,
     },
-    skip: !assignToTagsModalIsOpen,
+    skip: !removeFromTagsModalIsOpen,
   });
 
   const userTagsList = orgUserTagsData?.organizations[0].userTags.edges.map(
@@ -206,15 +206,15 @@ const AssignToTags: React.FC<InterfaceAssignToTagsProps> = ({
     }
   };
 
-  const [assignToTags] = useMutation(ASSIGN_TO_TAGS);
+  const [removeFromTags] = useMutation(REMOVE_FROM_TAGS);
 
-  const addPeopleToSelectedTags = async (
+  const removePropleFromSelectedTags = async (
     e: ChangeEvent<HTMLFormElement>,
   ): Promise<void> => {
     e.preventDefault();
 
     try {
-      const { data } = await assignToTags({
+      const { data } = await removeFromTags({
         variables: {
           currentTagId,
           selectedTagIds: selectedTags.map((selectedTag) => selectedTag._id),
@@ -222,8 +222,8 @@ const AssignToTags: React.FC<InterfaceAssignToTagsProps> = ({
       });
 
       if (data) {
-        toast.success(t('successfullyAssignedToTags'));
-        hideAssignToTagsModal();
+        toast.success(t('successfullyRemovedFromTags'));
+        hideRemoveFromTagsModal();
       }
     } catch (error: unknown) {
       /* istanbul ignore next */
@@ -236,8 +236,8 @@ const AssignToTags: React.FC<InterfaceAssignToTagsProps> = ({
   return (
     <>
       <Modal
-        show={assignToTagsModalIsOpen}
-        onHide={hideAssignToTagsModal}
+        show={removeFromTagsModalIsOpen}
+        onHide={hideRemoveFromTagsModal}
         backdrop="static"
         aria-labelledby="contained-modal-title-vcenter"
         centered
@@ -247,9 +247,11 @@ const AssignToTags: React.FC<InterfaceAssignToTagsProps> = ({
           data-testid="modalOrganizationHeader"
           closeButton
         >
-          <Modal.Title className="text-white">{t('assignToTags')}</Modal.Title>
+          <Modal.Title className="text-white">
+            {t('removeFromTags')}
+          </Modal.Title>
         </Modal.Header>
-        <Form onSubmitCapture={addPeopleToSelectedTags}>
+        <Form onSubmitCapture={removePropleFromSelectedTags}>
           <Modal.Body className="pb-0">
             {orgUserTagsLoading ? (
               <Loader size="sm" />
@@ -314,7 +316,7 @@ const AssignToTags: React.FC<InterfaceAssignToTagsProps> = ({
           <Modal.Footer>
             <Button
               variant="secondary"
-              onClick={(): void => hideAssignToTagsModal()}
+              onClick={(): void => hideRemoveFromTagsModal()}
               data-testid="closeAddPeopleToTagModal"
             >
               {tCommon('cancel')}
@@ -322,9 +324,10 @@ const AssignToTags: React.FC<InterfaceAssignToTagsProps> = ({
             <Button
               type="submit"
               value="add"
+              variant="danger"
               data-testid="addPeopleToTagModalSubmitBtn"
             >
-              {t('assign')}
+              {t('remove')}
             </Button>
           </Modal.Footer>
         </Form>
@@ -333,7 +336,7 @@ const AssignToTags: React.FC<InterfaceAssignToTagsProps> = ({
   );
 };
 
-export default AssignToTags;
+export default RemoveFromTags;
 
 function TagNode({
   tag,
