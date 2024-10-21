@@ -515,6 +515,10 @@ export const USER_DETAILS = gql`
         membershipRequests {
           _id
         }
+        tagsAssigned {
+          _id
+          name
+        }
       }
       appUserProfile {
         _id

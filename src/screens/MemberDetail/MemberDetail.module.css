@@ -521,3 +521,31 @@ input::file-selector-button {
 .Outline {
   outline: 1px solid var(--bs-gray-400);
 }
+
+.tagLink {
+  text-decoration: none;
+  color: #333;
+  transition: color 0.3s;
+}
+
+.tagLink:hover {
+  color: #007bff;
+  text-decoration: underline;
+  font-weight: bold;
+}
+
+.mt-4 .personal {
+  border-radius: 0.5rem;
+}
+
+.mt-4 .personal h3 {
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.mt-4 .personal .btn-danger {
+  background-color: #dc3545;
+  border: none;
+  font-size: 0.875rem;
+  padding: 0.25rem 0.75rem;
+}
