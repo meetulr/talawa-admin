@@ -261,6 +261,16 @@ function SubTags(): JSX.Element {
             data-testid="tagName"
             onClick={() => redirectToSubTags(params.row._id as string)}
           >
+            {params.row.childTags.totalCount ? (
+              <>
+                <i className="fa fa-folder mx-2" />{' '}
+              </>
+            ) : (
+              <>
+                <i className="fa fa-tag mx-2" />{' '}
+              </>
+            )}
+
             {params.row.name}
 
             <i className={'ms-2 fa fa-caret-right'} />
