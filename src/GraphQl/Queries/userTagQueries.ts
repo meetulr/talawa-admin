@@ -98,10 +98,17 @@ export const USER_TAG_SUB_TAGS = gql`
     $before: String
     $first: PositiveInt
     $last: PositiveInt
+    $where: UserTagWhereInput
   ) {
     getUserTag(id: $id) {
       name
-      childTags(after: $after, before: $before, first: $first, last: $last) {
+      childTags(
+        after: $after
+        before: $before
+        first: $first
+        last: $last
+        where: $where
+      ) {
         edges {
           node {
             _id

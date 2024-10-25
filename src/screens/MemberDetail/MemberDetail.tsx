@@ -524,14 +524,23 @@ const MemberDetail: React.FC<MemberDetailProps> = ({ id }): JSX.Element => {
                   <h3>Tags</h3>
                 </div>
                 <div
-                  className="px-4"
-                  style={{ maxHeight: '200px', overflowY: 'auto' }}
+                  className="px-4 bg-light-grey"
+                  style={{
+                    maxHeight: '200px',
+                    overflowY: 'auto',
+                    backgroundColor: '#f5f5f5',
+                  }}
                 >
-                  {userData.user.tagsAssigned.map((tag: any) => (
+                  {userData.user.tagsAssigned.map((tag: any, index: number) => (
                     <div
                       key={tag.id}
                       className="d-flex justify-content-between align-items-center mb-2 mt-2 pt-2 pb-3"
-                      style={{ borderBottom: '1px solid #e0e0e0' }}
+                      style={{
+                        borderBottom:
+                          index < userData.user.tagsAssigned.length - 1
+                            ? '1px solid #e0e0e0'
+                            : 'none', // No border for the last element
+                      }}
                     >
                       {/* Use Link component for navigation */}
                       <Link

@@ -54,6 +54,8 @@ function SubTags(): JSX.Element {
 
   const [tagName, setTagName] = useState<string>('');
 
+  const [searchTagInput, setSearchTagInput] = useState('');
+
   const [removeUserTagId, setRemoveUserTagId] = useState(null);
   const [removeUserTagModalIsOpen, setRemoveUserTagModalIsOpen] =
     useState(false);
@@ -88,6 +90,7 @@ function SubTags(): JSX.Element {
       before: before,
       first: first,
       last: last,
+      where: { name_starts_with: searchTagInput },
     },
   });
 
@@ -160,10 +163,6 @@ function SubTags(): JSX.Element {
       }
     }
   };
-
-  if (createUserTagLoading || subTagsLoading || orgUserTagsAncestorsLoading) {
-    return <Loader />;
-  }
 
   if (subTagsError || orgUserTagsAncestorsError) {
     return (
@@ -356,6 +355,8 @@ function SubTags(): JSX.Element {
     },
   ];
 
+  console.log(searchTagInput);
+
   return (
     <>
       <Row className={styles.head}>
@@ -370,6 +371,7 @@ function SubTags(): JSX.Element {
                 data-testid="searchByName"
                 autoComplete="off"
                 required
+                onChange={(e) => setSearchTagInput(e.target.value)}
               />
               <Button
                 tabIndex={-1}
@@ -452,6 +454,11 @@ function SubTags(): JSX.Element {
                 </div>
               ))}
             </div>
+
+            {(createUserTagLoading ||
+              subTagsLoading ||
+              orgUserTagsAncestorsLoading) && <Loader />}
+
             <DataGrid
               disableColumnMenu
               columnBufferPx={7}

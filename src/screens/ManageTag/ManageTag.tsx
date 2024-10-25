@@ -435,16 +435,16 @@ function ManageTag(): JSX.Element {
               <div className="bg-secondary text-white rounded-top mb-0 py-2 fw-semibold ms-2">
                 <div className="ms-3 fs-5">{'Actions'}</div>
               </div>
-              <div className="bg-white mb-0 py-2 fw-semibold ms-2">
+              {/* <div className="bg-white mb-0 py-2 fw-semibold ms-2">
                 <div className="ms-4 btn btn-primary my-2 btn-sm w-75">
                   {'Email Users'}
                 </div>
                 <hr className="mb-1 mt-2" />
-              </div>
+              </div> */}
               <div className="bg-white rounded-bottom mb-0 py-2 fw-semibold ms-2">
                 <div
                   onClick={showAssignToTagsModal}
-                  className="ms-4 mb-2 btn btn-primary btn-sm w-75"
+                  className="ms-4 mt-2 mb-2 btn btn-primary btn-sm w-75"
                 >
                   {'Assign to tags'}
                 </div>
