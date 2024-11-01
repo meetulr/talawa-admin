@@ -329,7 +329,7 @@ const AddPeopleToTag: React.FC<InterfaceAddPeopleToTagProps> = ({
                   id="addPeopleToTagScrollableDiv"
                   data-testid="addPeopleToTagScrollableDiv"
                   style={{
-                    height: 300,
+                    maxHeight: 300,
                     overflow: 'auto',
                   }}
                 >

@@ -111,7 +111,6 @@ describe('Organisation Tags Page', () => {
       ...jest.requireActual('react-router-dom'),
       useParams: () => ({ orgId: 'orgId' }),
     }));
-    cache.reset();
   });
 
   afterEach(() => {

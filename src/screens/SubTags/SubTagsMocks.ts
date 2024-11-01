@@ -245,10 +245,10 @@ export const MOCKS = [
                   _id: 'subTag11',
                   name: 'subTag 11',
                   usersAssignedTo: {
-                    totalCount: 0,
+                    totalCount: 5,
                   },
                   childTags: {
-                    totalCount: 0,
+                    totalCount: 5,
                   },
                   ancestorTags: [
                     {
@@ -390,7 +390,7 @@ export const MOCKS = [
               startCursor: 'searchSubTag1',
               endCursor: 'searchSubTag2',
               hasNextPage: false,
-              hasPreviousPage: false,
+              hasPreviousPage: true,
             },
             totalCount: 2,
           },

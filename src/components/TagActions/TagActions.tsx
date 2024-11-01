@@ -333,7 +333,7 @@ const TagActions: React.FC<InterfaceTagActionsProps> = ({
                   id="scrollableDiv"
                   data-testid="scrollableDiv"
                   style={{
-                    height: 300,
+                    maxHeight: 300,
                     overflow: 'auto',
                   }}
                 >
