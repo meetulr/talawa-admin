@@ -301,29 +301,26 @@ function OrganizationTags(): JSX.Element {
       <Row>
         <div>
           <div className={styles.btnsContainer}>
-            <div className={styles.input}>
+            <div className={styles.inputContainer}>
               <i className="fa fa-search position-absolute text-body-tertiary end-0 top-50 translate-middle" />
               <Form.Control
                 type="text"
                 id="tagName"
-                className="bg-white"
                 placeholder={tCommon('searchByName')}
                 data-testid="searchByName"
                 onChange={(e) => setTagSearchName(e.target.value.trim())}
                 autoComplete="off"
               />
             </div>
-            <div className={styles.btnsBlock}>
+            <div className={styles.optionsRow}>
               <Dropdown
                 aria-expanded="false"
                 title="Sort Tags"
                 data-testid="sort"
+                className={styles.sortDropdown}
               >
-                <Dropdown.Toggle
-                  variant="outline-success"
-                  data-testid="sortTags"
-                >
-                  <SortIcon className={'me-1'} />
+                <Dropdown.Toggle data-testid="sortTags">
+                  <SortIcon className="me-1" />
                   {tagSortOrder === 'DESCENDING'
                     ? tCommon('Latest')
                     : tCommon('Oldest')}
@@ -343,16 +340,15 @@ function OrganizationTags(): JSX.Element {
                   </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
+              <Button
+                onClick={showCreateTagModal}
+                data-testid="createTagBtn"
+                className={styles.createBtn}
+              >
+                <i className="fa fa-plus me-2" />
+                {t('createTag')}
+              </Button>
             </div>
-            <Button
-              variant="success"
-              onClick={showCreateTagModal}
-              data-testid="createTagBtn"
-              className="ms-auto"
-            >
-              <i className={'fa fa-plus me-2'} />
-              {t('createTag')}
-            </Button>
           </div>
 
           {orgUserTagsLoading || createUserTagLoading ? (

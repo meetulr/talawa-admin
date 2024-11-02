@@ -1,80 +1,50 @@
+/* General container styles */
 .btnsContainer {
   display: flex;
-  margin: 2rem 0;
-}
-
-.btnsContainer .btnsBlock {
-  display: flex;
-  width: max-content;
-}
-
-.btnsContainer .btnsBlock button {
-  margin-left: 1rem;
-  display: flex;
-  justify-content: center;
+  flex-wrap: wrap; /* Allows wrapping on small screens */
   align-items: center;
+  width: 100%;
+  gap: 10px; /* Space between items */
+  margin: 2rem 0; /* Increased vertical margins */
 }
 
-.btnsContainer .input {
-  flex: 1;
+/* Input container */
+.input {
   position: relative;
-  max-width: 60%;
-  justify-content: space-between;
+  width: 100%; /* Full width on small screens */
 }
 
-.btnsContainer input {
-  outline: 1px solid var(--bs-gray-400);
+/* Button block for sort and sub tags */
+.btnsBlock {
+  display: flex; /* Aligns buttons in a row */
+  gap: 10px; /* Space between dropdown and button */
 }
 
-.btnsContainer .input button {
-  width: 52px;
+/* Dropdown and button styles */
+.sortDropdown,
+.subTagsBtn {
+  flex-shrink: 0; /* Prevent shrinking */
 }
 
-@media (max-width: 1020px) {
+/* Responsive adjustments */
+@media (min-width: 768px) {
   .btnsContainer {
-    flex-direction: column;
-    margin: 1.5rem 0;
+    flex-direction: row; /* Align in a row on large screens */
+    flex-wrap: nowrap; /* Prevent wrapping on large screens */
   }
 
-  .btnsContainer .btnsBlock {
-    margin: 1.5rem 0 0 0;
-    justify-content: space-between;
+  .input {
+    width: 40%; /* Input takes up 40% on large screens */
   }
 
-  .btnsContainer .btnsBlock button {
-    margin: 0;
+  .btnsBlock {
+    width: 60%; /* Button block takes up remaining 60% */
+    justify-content: flex-start; /* Aligns buttons in a row without extra space */
   }
 
-  .btnsContainer .btnsBlock div button {
-    margin-right: 1.5rem;
-  }
-}
-
-/* For mobile devices  */
-
-@media (max-width: 520px) {
-  .btnsContainer {
-    margin-bottom: 0;
-  }
-
-  .btnsContainer .btnsBlock {
-    display: block;
-    margin-top: 1rem;
-    margin-right: 0;
-  }
-
-  .btnsContainer .btnsBlock div {
-    flex: 1;
-  }
-
-  .btnsContainer .btnsBlock div[title='Sort organizations'] {
-    margin-right: 0.5rem;
-  }
-
-  .btnsContainer .btnsBlock button {
-    margin-bottom: 1rem;
-    margin-right: 0;
-    width: 100%;
+  .addPeopleBtn {
+    width: auto; /* Allow for auto width */
+    min-width: 200px; /* Increase minimum width on larger screens */
   }
 }
 

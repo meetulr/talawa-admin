@@ -279,152 +279,144 @@ function SubTags(): JSX.Element {
   return (
     <>
       <Row className={styles.head}>
-        <div className={styles.mainpageright}>
-          <div className={styles.btnsContainer}>
-            <div className={styles.input}>
-              <i className="fa fa-search position-absolute text-body-tertiary end-0 top-50 translate-middle" />
-              <Form.Control
-                type="text"
-                id="tagName"
-                className="bg-white"
-                placeholder={tCommon('searchByName')}
-                onChange={(e) => setTagSearchName(e.target.value.trim())}
-                data-testid="searchByName"
-                autoComplete="off"
-              />
-            </div>
-            <div className={styles.btnsBlock}>
-              <Dropdown
-                aria-expanded="false"
-                title="Sort Tag"
-                data-testid="sort"
-              >
-                <Dropdown.Toggle
-                  variant="outline-success"
-                  data-testid="sortTags"
+        <div className={styles.btnsContainer}>
+          <div className={styles.input}>
+            <i className="fa fa-search position-absolute text-body-tertiary end-0 top-50 translate-middle" />
+            <Form.Control
+              type="text"
+              id="tagName"
+              className="bg-white"
+              placeholder={tCommon('searchByName')}
+              onChange={(e) => setTagSearchName(e.target.value.trim())}
+              data-testid="searchByName"
+              autoComplete="off"
+            />
+          </div>
+          <div className={styles.optionsRow}>
+            <Dropdown aria-expanded="false" title="Sort Tag" data-testid="sort">
+              <Dropdown.Toggle variant="outline-success" data-testid="sortTags">
+                <SortIcon className={'me-1'} />
+                {tagSortOrder === 'DESCENDING'
+                  ? tCommon('Latest')
+                  : tCommon('Oldest')}
+              </Dropdown.Toggle>
+              <Dropdown.Menu>
+                <Dropdown.Item
+                  data-testid="latest"
+                  onClick={() => setTagSortOrder('DESCENDING')}
                 >
-                  <SortIcon className={'me-1'} />
-                  {tagSortOrder === 'DESCENDING'
-                    ? tCommon('Latest')
-                    : tCommon('Oldest')}
-                </Dropdown.Toggle>
-                <Dropdown.Menu>
-                  <Dropdown.Item
-                    data-testid="latest"
-                    onClick={() => setTagSortOrder('DESCENDING')}
-                  >
-                    {tCommon('Latest')}
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    data-testid="oldest"
-                    onClick={() => setTagSortOrder('ASCENDING')}
-                  >
-                    {tCommon('Oldest')}
-                  </Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
+                  {tCommon('Latest')}
+                </Dropdown.Item>
+                <Dropdown.Item
+                  data-testid="oldest"
+                  onClick={() => setTagSortOrder('ASCENDING')}
+                >
+                  {tCommon('Oldest')}
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
 
-              <Button
-                variant="success"
-                onClick={() => redirectToManageTag(parentTagId as string)}
-                data-testid="manageCurrentTagBtn"
-                className="mx-4"
-              >
-                {`${t('manageTag')} ${subTagsData?.getChildTags.name}`}
-              </Button>
-            </div>
+            <Button
+              variant="success"
+              onClick={() => redirectToManageTag(parentTagId as string)}
+              data-testid="manageCurrentTagBtn"
+              className="ms-2" // Add a small left margin
+            >
+              {`${t('manageTag')} ${subTagsData?.getChildTags.name}`}
+            </Button>
+
             <Button
               variant="success"
               onClick={showAddSubTagModal}
               data-testid="addSubTagBtn"
-              className="ms-auto"
+              className="ms-auto" // Aligns the button to the right on large screens
             >
               <i className={'fa fa-plus me-2'} />
               {t('addChildTag')}
             </Button>
           </div>
-
-          {subTagsLoading || createUserTagLoading ? (
-            <Loader />
-          ) : (
-            <div className="mb-4">
-              <div className="bg-white light border rounded-top mb-0 py-2 d-flex align-items-center">
-                <div className="ms-3 my-1">
-                  <IconComponent name="Tag" />
-                </div>
-
-                <div
-                  onClick={() => navigate(`/orgtags/${orgId}`)}
-                  className={`fs-6 ms-3 my-1 ${styles.tagsBreadCrumbs}`}
-                  data-testid="allTagsBtn"
-                >
-                  {'Tags'}
-                  <i className={'mx-2 fa fa-caret-right'} />
-                </div>
-
-                {orgUserTagAncestors?.map((tag, index) => (
-                  <div
-                    key={index}
-                    className={`ms-2 my-1 ${tag._id === parentTagId ? `fs-4 fw-semibold text-secondary` : `${styles.tagsBreadCrumbs} fs-6`}`}
-                    onClick={() => redirectToSubTags(tag._id as string)}
-                    data-testid="redirectToSubTags"
-                  >
-                    {tag.name}
-
-                    {orgUserTagAncestors.length - 1 !== index && (
-                      <i className={'mx-2 fa fa-caret-right'} />
-                    )}
-                  </div>
-                ))}
-              </div>
-              <div
-                id="subTagsScrollableDiv"
-                data-testid="subTagsScrollableDiv"
-                className={styles.subTagsScrollableDiv}
-              >
-                <InfiniteScroll
-                  dataLength={subTagsList?.length ?? 0}
-                  next={loadMoreSubTags}
-                  hasMore={
-                    subTagsData?.getChildTags.childTags.pageInfo.hasNextPage ??
-                    /* istanbul ignore next */
-                    false
-                  }
-                  loader={<InfiniteScrollLoader />}
-                  scrollableTarget="subTagsScrollableDiv"
-                >
-                  <DataGrid
-                    disableColumnMenu
-                    columnBufferPx={7}
-                    hideFooter={true}
-                    getRowId={(row) => row.id}
-                    slots={{
-                      noRowsOverlay: /* istanbul ignore next */ () => (
-                        <Stack
-                          height="100%"
-                          alignItems="center"
-                          justifyContent="center"
-                        >
-                          {t('noTagsFound')}
-                        </Stack>
-                      ),
-                    }}
-                    sx={dataGridStyle}
-                    getRowClassName={() => `${styles.rowBackground}`}
-                    autoHeight
-                    rowHeight={65}
-                    rows={subTagsList?.map((subTag, index) => ({
-                      id: index + 1,
-                      ...subTag,
-                    }))}
-                    columns={columns}
-                    isRowSelectable={() => false}
-                  />
-                </InfiniteScroll>
-              </div>
-            </div>
-          )}
         </div>
+
+        {subTagsLoading || createUserTagLoading ? (
+          <Loader />
+        ) : (
+          <div className="mb-4">
+            <div className="bg-white light border rounded-top mb-0 py-2 d-flex align-items-center">
+              <div className="ms-3 my-1">
+                <IconComponent name="Tag" />
+              </div>
+
+              <div
+                onClick={() => navigate(`/orgtags/${orgId}`)}
+                className={`fs-6 ms-3 my-1 ${styles.tagsBreadCrumbs}`}
+                data-testid="allTagsBtn"
+              >
+                {'Tags'}
+                <i className={'mx-2 fa fa-caret-right'} />
+              </div>
+
+              {orgUserTagAncestors?.map((tag, index) => (
+                <div
+                  key={index}
+                  className={`ms-2 my-1 ${tag._id === parentTagId ? `fs-4 fw-semibold text-secondary` : `${styles.tagsBreadCrumbs} fs-6`}`}
+                  onClick={() => redirectToSubTags(tag._id as string)}
+                  data-testid="redirectToSubTags"
+                >
+                  {tag.name}
+
+                  {orgUserTagAncestors.length - 1 !== index && (
+                    <i className={'mx-2 fa fa-caret-right'} />
+                  )}
+                </div>
+              ))}
+            </div>
+            <div
+              id="subTagsScrollableDiv"
+              data-testid="subTagsScrollableDiv"
+              className={styles.subTagsScrollableDiv}
+            >
+              <InfiniteScroll
+                dataLength={subTagsList?.length ?? 0}
+                next={loadMoreSubTags}
+                hasMore={
+                  subTagsData?.getChildTags.childTags.pageInfo.hasNextPage ??
+                  /* istanbul ignore next */
+                  false
+                }
+                loader={<InfiniteScrollLoader />}
+                scrollableTarget="subTagsScrollableDiv"
+              >
+                <DataGrid
+                  disableColumnMenu
+                  columnBufferPx={7}
+                  hideFooter={true}
+                  getRowId={(row) => row.id}
+                  slots={{
+                    noRowsOverlay: /* istanbul ignore next */ () => (
+                      <Stack
+                        height="100%"
+                        alignItems="center"
+                        justifyContent="center"
+                      >
+                        {t('noTagsFound')}
+                      </Stack>
+                    ),
+                  }}
+                  sx={dataGridStyle}
+                  getRowClassName={() => `${styles.rowBackground}`}
+                  autoHeight
+                  rowHeight={65}
+                  rows={subTagsList?.map((subTag, index) => ({
+                    id: index + 1,
+                    ...subTag,
+                  }))}
+                  columns={columns}
+                  isRowSelectable={() => false}
+                />
+              </InfiniteScroll>
+            </div>
+          </div>
+        )}
       </Row>
 
       {/* Create Tag Modal */}

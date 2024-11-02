@@ -36,6 +36,15 @@ export const dataGridStyle = {
   '& .MuiDataGrid-virtualScrollerContent': {
     marginTop: 6.5,
   },
+
+  // Media query for small screens
+  '@media (max-width: 768px)': {
+    '& .MuiDataGrid-topContainer': {
+      position: 'fixed',
+      top: 315,
+      zIndex: 1,
+    },
+  },
 };
 
 // the data chunk size for tag related queries
