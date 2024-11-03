@@ -322,7 +322,8 @@ function SubTags(): JSX.Element {
               data-testid="manageCurrentTagBtn"
               className="ms-2" // Add a small left margin
             >
-              {`${t('manageTag')} ${subTagsData?.getChildTags.name}`}
+              {/* {`${t('manageTag')} ${subTagsData?.getChildTags.name}`} */}
+              {tCommon('manage')}
             </Button>
 
             <Button
@@ -332,7 +333,8 @@ function SubTags(): JSX.Element {
               className="ms-auto" // Aligns the button to the right on large screens
             >
               <i className={'fa fa-plus me-2'} />
-              {t('addChildTag')}
+              {/* {t('addChildTag')} */}
+              {tCommon('create')}
             </Button>
           </div>
         </div>

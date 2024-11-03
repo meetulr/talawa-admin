@@ -323,7 +323,7 @@ function ManageTag(): JSX.Element {
       renderCell: (params: GridCellParams) => {
         return (
           <div>
-            <Link
+            {/* <Link
               to={`/member/${orgId}`}
               state={{ id: params.row._id }}
               data-testid="viewProfileBtn"
@@ -331,7 +331,7 @@ function ManageTag(): JSX.Element {
               <div className="btn btn-sm btn-primary me-3">
                 {t('viewProfile')}
               </div>
-            </Link>
+            </Link> */}
 
             <Button
               size="sm"
@@ -414,15 +414,16 @@ function ManageTag(): JSX.Element {
             className={`ms-auto ${styles.addPeopleBtn}`}
           >
             <i className={'fa fa-plus me-2'} />
-            {t('addPeopleToTag')}
+            {/* {t('addPeopleToTag')} */}
+            {tCommon('create')}
           </Button>
         </div>
 
         {userTagAssignedMembersLoading ? (
           <Loader />
         ) : (
-          <Row className="mb-4">
-            <Col xs={9}>
+          <Row className="mb-4 pe-0">
+            <Col xs={12} md={9} className="pe-0">
               <div className="bg-white light border rounded-top mb-0 py-2 d-flex align-items-center">
                 <div className="ms-3 my-1">
                   <IconComponent name="Tag" />
@@ -497,7 +498,7 @@ function ManageTag(): JSX.Element {
                 </InfiniteScroll>
               </div>
             </Col>
-            <Col className="ms-auto" xs={3}>
+            <Col className="ms-auto pe-0" xs={0} md={3}>
               <div className="bg-secondary text-white rounded-top mb-0 py-2 fw-semibold ms-2">
                 <div className="ms-3 fs-5">{'Actions'}</div>
               </div>

@@ -17,7 +17,6 @@
 /* Button block for sort and sub tags */
 .btnsBlock {
   display: flex; /* Aligns buttons in a row */
-  gap: 10px; /* Space between dropdown and button */
 }
 
 /* Dropdown and button styles */
@@ -31,6 +30,7 @@
   .btnsContainer {
     flex-direction: row; /* Align in a row on large screens */
     flex-wrap: nowrap; /* Prevent wrapping on large screens */
+    gap: 5px;
   }
 
   .input {

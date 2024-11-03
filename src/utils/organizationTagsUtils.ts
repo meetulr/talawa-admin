@@ -48,7 +48,7 @@ export const dataGridStyle = {
 };
 
 // the data chunk size for tag related queries
-export const TAGS_QUERY_DATA_CHUNK_SIZE = 10;
+export const TAGS_QUERY_DATA_CHUNK_SIZE = 30;
 
 // the tag action type
 export type TagActionType = 'assignToTags' | 'removeFromTags';
